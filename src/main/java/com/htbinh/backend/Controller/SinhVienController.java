@@ -79,7 +79,7 @@ public class SinhVienController {
             Connection.Response res = Jsoup.connect(scheduleURL).data(data).method(Connection.Method.POST).execute();
             Document raw = res.parse();
             for (Element row:
-                 raw.select("tblCalendar").select("tbody").first().select("tr")) {
+                 raw.select("table.tblCalendar").select("tbody").first().select("tr")) {
                 result.add(getEachDay(row));
             }
         } catch (IOException ioException) {
@@ -95,8 +95,7 @@ public class SinhVienController {
                 element.select("td")) {
             tmp.add(item.text());
         }
-        result = new TkbModel(tmp.get(2), tmp.get(0), tmp.get(1), tmp.get(4), tmp.get(5) + " - " tmp.get(6), tmp.get(3));
-
+        result = new TkbModel(tmp.get(1), tmp.get(0), tmp.get(6), tmp.get(3), tmp.get(4) + "-" + tmp.get(5), tmp.get(2));
         return result;
     }
 
@@ -158,10 +157,10 @@ public class SinhVienController {
                 String tenMH = row.get(2).text();
                 String maHP = row.get(1).text();
                 int soTc = (int)Float.parseFloat(row.get(3).text());
-                float diemCC = Float.parseFloat(row.get(4).text() == "" ? "-1" : row.get(4).text());
-                float diemGK = Float.parseFloat(row.get(7).text() == "" ? "-1" : row.get(7).text());
-                float diemCK = Float.parseFloat(row.get(8).text() == "" ? "-1" : row.get(8).text());
-                float diemTK = Float.parseFloat(row.get(19).text() == "" ? "-1" : row.get(19).text());
+                float diemCC = Float.parseFloat(row.get(4).text().equals("") ? "-1" : row.get(4).text());
+                float diemGK = Float.parseFloat(row.get(7).text().equals("") ? "-1" : row.get(7).text());
+                float diemCK = Float.parseFloat(row.get(8).text().equals("") ? "-1" : row.get(8).text());
+                float diemTK = Float.parseFloat(row.get(19).text().equals("") ? "-1" : row.get(19).text());
                 String diemChu = row.get(20).text();
 
                 result.add(new KetQuaHocTapChiTietModel(tenMH, maHP, soTc, diemCC, diemGK, diemCK, diemTK, diemChu));
