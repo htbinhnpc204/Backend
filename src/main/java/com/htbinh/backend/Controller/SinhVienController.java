@@ -1,9 +1,6 @@
 package com.htbinh.backend.Controller;
 
-import com.htbinh.backend.Model.KetQuaHocTapChiTietModel;
-import com.htbinh.backend.Model.KetQuaHocTapModel;
-import com.htbinh.backend.Model.SinhVienModel;
-import com.htbinh.backend.Model.TkbModel;
+import com.htbinh.backend.Model.*;
 import com.htbinh.backend.SessionHelper;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -14,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.print.Doc;
 import java.io.IOException;
 import java.util.*;
 
@@ -24,30 +20,56 @@ public class SinhVienController {
     private static final String informationURL = "https://daotao1.ute.udn.vn/thong-tin-ca-nhan.html";
     private static final String scheduleURL = "https://daotao1.ute.udn.vn/thoikhoabieu/index";
     private static final String ketQuaURL = "https://daotao1.ute.udn.vn/ket-qua-hoc-tap.html";
+    private static final String newsURL = "https://ute.udn.vn/LoaiTinTuc/1/Tin-tuc-chung.aspx";
 
-    Document infoDoc = null, scheduleDoc = null, ketQuaDoc = null;
+    Document infoDoc, scheduleDoc, ketQuaDoc, newsDoc;
 
 
-    @GetMapping("/sinhvien/getinfo")
-    public SinhVienModel getSinhVien() {
-        SinhVienModel svModel = null;
-        ArrayList<String> raw = new ArrayList<>();
-        if (!checkSession()) {
+
+    @GetMapping("/getNews")
+    public ArrayList<NewsModel> getNews() {
+        if (checkSession()) {
             return null;
         }
+        ArrayList<NewsModel> result = new ArrayList<>();
+        try{
+            Connection.Response res = Jsoup.connect(newsURL).method(Connection.Method.GET).execute();
+            Document raw = res.parse();
+
+
+        }catch (Exception ex){
+            return null;
+        }
+        return result;
+    }
+
+    @GetMapping("/sinhvien/getinfo")
+    public StudentModel getSinhVien() {
+        if (checkSession()) {
+            return null;
+        }
+        if(SessionHelper.getInfoSinhVien() != null){
+            return SessionHelper.getInfoSinhVien();
+        }
+
+        StudentModel svModel;
+        ArrayList<String> raw = new ArrayList<>();
+
         Elements list = infoDoc.select("input[readonly=readonly]");
         for (Element e :
                 list) {
             raw.add(e.val());
         }
-        svModel = new SinhVienModel(SessionHelper.getSv().getMsv(), raw.get(0),
+        svModel = new StudentModel(SessionHelper.getUser().getMsv(), raw.get(0),
                 raw.get(1), raw.get(4), raw.get(3), getDob());
+        SessionHelper.setInfoSinhVien(svModel);
+
         return svModel;
     }
 
     @GetMapping("/sinhvien/gettkb")
-    public ArrayList<TkbModel> getTkb() {
-        ArrayList<TkbModel> result = new ArrayList<>();
+    public ArrayList<ScheduleModel> getTkb() {
+        /*
 //        if (!checkSession()) {
 //            return null;
 //        }
@@ -65,15 +87,18 @@ public class SinhVienController {
 //            result.add(new TkbModel(buffer.get(0), buffer.get(1), buffer.get(2),
 //                    buffer.get(3), buffer.get(4), buffer.get(6), buffer.get(7)));
 //        }
-//        return result;
+//        return result;*/ //for old code get Tkb
 
-        if(!checkSession()){return null;}
-
+        if(checkSession()){return null;}
+        if(SessionHelper.getListTkb() != null){
+            return SessionHelper.getListTkb();
+        }
+        ArrayList<ScheduleModel> result = new ArrayList<>();
         Map<String, String> data = new HashMap<>();
         data.put("loai","sinhvien");
         data.put("maKhoa","1");
         data.put("maGiangvien","1");
-        data.put("maSinhvien",SessionHelper.getSv().getMsv());
+        data.put("maSinhvien",SessionHelper.getUser().getMsv());
 
         try {
             Connection.Response res = Jsoup.connect(scheduleURL).data(data).method(Connection.Method.POST).execute();
@@ -85,27 +110,31 @@ public class SinhVienController {
         } catch (IOException ioException) {
             return null;
         }
+        SessionHelper.setListTkb(result);
         return result;
     }
 
-    private TkbModel getEachDay(Element element){
-        TkbModel result;
+    private ScheduleModel getEachDay(Element element){
+        ScheduleModel result;
         ArrayList<String> tmp = new ArrayList<>();
         for (Element item:
                 element.select("td")) {
             tmp.add(item.text());
         }
-        result = new TkbModel(tmp.get(1), tmp.get(0), tmp.get(6), tmp.get(3), tmp.get(4) + "-" + tmp.get(5), tmp.get(2));
+        result = new ScheduleModel(tmp.get(1), tmp.get(0), tmp.get(6), tmp.get(3), tmp.get(4) + "-" + tmp.get(5), tmp.get(2));
         return result;
     }
 
     @GetMapping("/sinhvien/kqhoctap")
     public ArrayList<KetQuaHocTapModel> getKq() {
-        ArrayList<KetQuaHocTapModel> result = new ArrayList<>();
-        if (!checkSession()) {
+        if (checkSession()) {
             return null;
         }
+        if(SessionHelper.getListKq() != null){
+            return SessionHelper.getListKq();
+        }
 
+        ArrayList<KetQuaHocTapModel> result = new ArrayList<>();
         Elements table = ketQuaDoc.select("table.tblKhaosat");
         Elements body = table.select("tbody");
         Elements rows = body.get(0).select("tr");
@@ -123,16 +152,20 @@ public class SinhVienController {
 
             result.add(new KetQuaHocTapModel(buffer.get(0), buffer.get(2), buffer.get(6), dtbHocKy, dtbHocBong));
         }
-
+        SessionHelper.setListKq(result);
         return result;
     }
 
     @GetMapping("/sinhvien/kqhoctap/chitiet")
     public ArrayList<KetQuaHocTapChiTietModel> getChiTietKq(@RequestParam String hocKy) {
-        ArrayList<KetQuaHocTapChiTietModel> result = new ArrayList<>();
-        if (!checkSession()) {
+        if (checkSession()) {
             return null;
         }
+        if(SessionHelper.getListKqChiTiet() != null){
+            return SessionHelper.getListKqChiTiet();
+        }
+
+        ArrayList<KetQuaHocTapChiTietModel> result = new ArrayList<>();
         Elements elements = ketQuaDoc.select("table.tblKhaosat").select("tr.tr-namhoc-hocky");
         Element startElement = null;
         for (Element e :
@@ -167,13 +200,14 @@ public class SinhVienController {
 
             } while (true);
         }
+        SessionHelper.setListKqChiTiet(result);
         return result;
     }
 
     @GetMapping("/getselectoption")
     public ArrayList<String> getOption() {
         ArrayList<String> result = new ArrayList<>();
-        if (!checkSession()) {
+        if (checkSession()) {
             return null;
         }
 
@@ -197,15 +231,20 @@ public class SinhVienController {
         if (SessionHelper.getCookies() != null) {
             Map<String, String> cookies = SessionHelper.getCookies();
             try {
-                if (scheduleDoc == null || infoDoc == null || ketQuaDoc == null) {
+                if (!checkNull()){
                     scheduleDoc = Jsoup.connect(scheduleURL).cookies(cookies).get();
                     infoDoc = Jsoup.connect(informationURL).cookies(cookies).get();
                     ketQuaDoc = Jsoup.connect(ketQuaURL).cookies(cookies).get();
+                    newsDoc = Jsoup.connect(newsURL).cookies(cookies).get();
                 }
             } catch (Exception ex) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
+    }
+
+    private boolean checkNull(){
+        return scheduleDoc == null || infoDoc == null || ketQuaDoc == null || newsDoc == null;
     }
 }
