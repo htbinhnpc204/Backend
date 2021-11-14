@@ -2,6 +2,7 @@ package com.htbinh.backend.Controller;
 
 import com.htbinh.backend.Model.LoginModel;
 import com.htbinh.backend.SessionHelper;
+import io.sentry.Sentry;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,7 @@ public class LoginController {
             SessionHelper.setUser(user);
             return checkLogin(res.body());
         } catch (IOException ioException) {
+            Sentry.captureException(ioException);
             return false;
         }
     }

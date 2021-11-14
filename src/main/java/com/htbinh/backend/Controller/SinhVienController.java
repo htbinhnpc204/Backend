@@ -231,7 +231,7 @@ public class SinhVienController {
         if (SessionHelper.getCookies() != null) {
             Map<String, String> cookies = SessionHelper.getCookies();
             try {
-                if (!checkNull()){
+                if (checkNull()){
                     scheduleDoc = Jsoup.connect(scheduleURL).cookies(cookies).get();
                     infoDoc = Jsoup.connect(informationURL).cookies(cookies).get();
                     ketQuaDoc = Jsoup.connect(ketQuaURL).cookies(cookies).get();
