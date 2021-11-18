@@ -46,13 +46,34 @@
             <artifactId>jsoup</artifactId>
             <version>1.14.3</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry-spring-boot-starter</artifactId>
+            <version>5.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry-logback</artifactId>
+            <version>5.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin.external.google</groupId>
+            <artifactId>android-json</artifactId>
+            <version>0.0.20131108.vaadin1</version>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <groupId>com.heroku.sdk</groupId>
+                <artifactId>heroku-maven-plugin</artifactId>
+                <version>3.0.3</version>
+                <configuration>
+                    <jdkVersion>11</jdkVersion>
+                </configuration>
             </plugin>
         </plugins>
     </build>
