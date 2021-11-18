@@ -2,6 +2,7 @@ package com.htbinh.backend.Controller;
 
 import com.htbinh.backend.Model.LoginModel;
 import com.htbinh.backend.SessionHelper;
+import io.sentry.Sentry;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,17 +24,15 @@ public class LoginController {
             Connection.Response res = Jsoup.connect(loginUrl).data("username", user.getMsv(),
                     "password", user.getPassword()).method(Connection.Method.POST).execute();
             SessionHelper.setCookies(res.cookies());
-            SessionHelper.setSv(user);
+            SessionHelper.setUser(user);
             return checkLogin(res.body());
         } catch (IOException ioException) {
+            Sentry.captureException(ioException);
             return false;
         }
     }
 
     private static boolean checkLogin(String sources){
-        if (sources.contains("success")) {
-            return true;
-        }
-        return false;
+        return sources.contains("success");
     }
 }

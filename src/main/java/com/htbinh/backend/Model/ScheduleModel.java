@@ -1,9 +1,9 @@
 package com.htbinh.backend.Model;
 
-public class TkbModel {
+public class ScheduleModel {
     private String tenHp, tenLopHp, giangVien, Thu, Tiet, Phong;
 
-    public TkbModel(String tenHp, String tenLopHp, String giangVien, String thu, String tiet, String phong) {
+    public ScheduleModel(String tenHp, String tenLopHp, String giangVien, String thu, String tiet, String phong) {
         this.tenHp = tenHp;
         this.tenLopHp = tenLopHp;
         this.giangVien = giangVien;

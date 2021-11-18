@@ -1,12 +1,12 @@
 package com.htbinh.backend.Model;
 
-public class SinhVienModel {
-    String ma_sv, ten_sv, lop, nganh, khoa;
+import java.util.ArrayList;
 
-    String ngaySinh;
+public class StudentModel {
+    private String ma_sv, ten_sv, lop, nganh, khoa;
+    private String ngaySinh;
 
-
-    public SinhVienModel(String ma_sv, String ten_sv, String lop, String nganh, String khoa, String ngaySinh) {
+    public StudentModel(String ma_sv, String ten_sv, String lop, String nganh, String khoa, String ngaySinh) {
         this.ma_sv = ma_sv;
         this.ten_sv = ten_sv;
         this.lop = lop;
