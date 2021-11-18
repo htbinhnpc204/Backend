@@ -2,16 +2,22 @@ package com.htbinh.backend.Controller;
 
 import com.htbinh.backend.Model.*;
 import com.htbinh.backend.SessionHelper;
+import org.json.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.DocumentType;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
 
 @RestController
@@ -20,26 +26,91 @@ public class SinhVienController {
     private static final String informationURL = "https://daotao1.ute.udn.vn/thong-tin-ca-nhan.html";
     private static final String scheduleURL = "https://daotao1.ute.udn.vn/thoikhoabieu/index";
     private static final String ketQuaURL = "https://daotao1.ute.udn.vn/ket-qua-hoc-tap.html";
-    private static final String newsURL = "https://ute.udn.vn/LoaiTinTuc/1/Tin-tuc-chung.aspx";
+    private static final String notiURL = "https://daotao1.ute.udn.vn/sinhvien/thongbao/thongbaotulophocphan/";
 
-    Document infoDoc, scheduleDoc, ketQuaDoc, newsDoc;
+    Map<String, String> cookies;
 
+    Document infoDoc, scheduleDoc, ketQuaDoc;
 
-
-    @GetMapping("/getNews")
-    public ArrayList<NewsModel> getNews() {
+    @GetMapping("/sinhvien/getnoti")
+    public ArrayList<NotificationModel> getNoti(){
         if (checkSession()) {
             return null;
         }
+        ArrayList<NotificationModel> result = new ArrayList<>();
+        try{
+            Document doc = getNotiDocument();
+            for (Element row:
+                 doc.select("tbody").select("tr")) {
+                ArrayList<String> tmp = new ArrayList<>();
+                for (Element item:
+                     row.select("td")) {
+                    tmp.add(item.text());
+                }
+                String link = row.select("a").attr("href");
+                String from = tmp.get(2);
+                String toClass = tmp.get(1).split(":")[1].replace(" ","");
+                String date = tmp.get(3);
+                result.add(new NotificationModel(from, toClass, date, link));
+            }
+        }catch(Exception ex){return null;}
+        return result;
+    }
+
+    private Document getNotiDocument(){
+        StringBuffer response = new StringBuffer();
+        JSONObject json = new JSONObject();
+        String raw = "";
+        try {
+            URL url = new URL(notiURL);
+            HttpURLConnection http = (HttpURLConnection) url.openConnection();
+            http.setRequestProperty("cookie", "PHPSESSID=" + cookies.get("PHPSESSID") + ";token=" + cookies.get("token") + ";");
+            int responseCode = http.getResponseCode();
+            BufferedReader in = new BufferedReader(new InputStreamReader(http.getInputStream()));
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            json = new JSONObject(response.toString());
+            byte[] utf8 = json.get("html").toString().getBytes("UTF-8");
+            raw = new String(utf8, "UTF-8");
+        }catch (Exception ex){}
+        return Jsoup.parse(raw);
+    }
+
+    @GetMapping("/getNews")
+    public ArrayList<NewsModel> getNews() {
+
+        String newsURL = "https://ute.udn.vn/LoaiTinTuc/1/Tin-tuc-chung.aspx";
+
+        if(SessionHelper.getListNews() != null){
+            return SessionHelper.getListNews();
+        }
+
         ArrayList<NewsModel> result = new ArrayList<>();
         try{
-            Connection.Response res = Jsoup.connect(newsURL).method(Connection.Method.GET).execute();
+            Connection.Response res = Jsoup.connect(newsURL).method(Connection.Method.POST).execute();
             Document raw = res.parse();
 
+            Elements magazine_items = raw.select("div.magazine-list")
+                    .select("div.t3-content")
+                    .select("div.magazine-item");
 
+            for (Element item:
+                 magazine_items) {
+                String title = item.select("h3").select("a").text();
+                String description = item.select("div.magazine-item-ct").select("p").first().text();
+                String published_date = item.select("dd.published").text();
+                String imageLink = "https://ute.udn.vn" + item.select("div.item-image").select("img").first().attr("src");
+                String detailsLink = item.select("h3").select("a").first().attr("href");
+
+                result.add(new NewsModel(title, description, published_date, imageLink, detailsLink));
+            }
         }catch (Exception ex){
-            return null;
         }
+
+        SessionHelper.setListNews(result);
         return result;
     }
 
@@ -229,13 +300,12 @@ public class SinhVienController {
 
     private boolean checkSession() {
         if (SessionHelper.getCookies() != null) {
-            Map<String, String> cookies = SessionHelper.getCookies();
+            cookies = SessionHelper.getCookies();
             try {
                 if (checkNull()){
                     scheduleDoc = Jsoup.connect(scheduleURL).cookies(cookies).get();
                     infoDoc = Jsoup.connect(informationURL).cookies(cookies).get();
                     ketQuaDoc = Jsoup.connect(ketQuaURL).cookies(cookies).get();
-                    newsDoc = Jsoup.connect(newsURL).cookies(cookies).get();
                 }
             } catch (Exception ex) {
                 return true;
@@ -245,6 +315,6 @@ public class SinhVienController {
     }
 
     private boolean checkNull(){
-        return scheduleDoc == null || infoDoc == null || ketQuaDoc == null || newsDoc == null;
+        return scheduleDoc == null || infoDoc == null || ketQuaDoc == null;
     }
 }
