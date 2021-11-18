@@ -72,7 +72,7 @@
                 <artifactId>heroku-maven-plugin</artifactId>
                 <version>3.0.3</version>
                 <configuration>
-                    <jdkVersion>1.8</jdkVersion>
+                    <jdkVersion>11</jdkVersion>
                 </configuration>
             </plugin>
         </plugins>
