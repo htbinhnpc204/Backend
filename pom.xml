@@ -84,7 +84,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.htbinh.Backend</mainClass>
+                            <mainClass>com.htbinh.Backend.BackendApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
