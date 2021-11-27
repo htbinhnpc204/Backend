@@ -9,6 +9,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.DocumentType;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.jndi.JndiObjectTargetSource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,10 +28,43 @@ public class SinhVienController {
     private static final String scheduleURL = "https://daotao1.ute.udn.vn/thoikhoabieu/index";
     private static final String ketQuaURL = "https://daotao1.ute.udn.vn/ket-qua-hoc-tap.html";
     private static final String notiURL = "https://daotao1.ute.udn.vn/sinhvien/thongbao/thongbaotulophocphan/";
+    private static final String tuitionURL = "https://daotao1.ute.udn.vn/hoc-phi";
 
     Map<String, String> cookies;
 
-    Document infoDoc, scheduleDoc, ketQuaDoc;
+    Document infoDoc, scheduleDoc, ketQuaDoc, tuitionDoc;
+
+    @GetMapping("/sinhvien/getfee")
+    public ArrayList<TuitionModel> getTuition(){
+        if (checkSession()) {
+            return null;
+        }
+        if(SessionHelper.getListTuition() != null){
+            return SessionHelper.getListTuition();
+        }
+
+        ArrayList<TuitionModel> result = new ArrayList<>();
+        Elements items = tuitionDoc.select("div.hocphi_item");
+        for (Element item :
+                items) {
+            ArrayList<String> buffer = new ArrayList<>();
+            String hocKy = item.select("h3").get(0).text();
+            Elements cols = item.select("tr");
+            for (Element r :
+                    cols) {
+                Element text = r.select("td").get(1);
+                buffer.add(text.text());
+            }
+
+            int soTinChi = (int)Float.parseFloat(buffer.get(0));
+            String hocPhi = buffer.get(2);
+            String noKyTruoc = buffer.get(7);
+
+            result.add(new TuitionModel(hocKy, soTinChi, hocPhi, noKyTruoc));
+        }
+        SessionHelper.setListTuition(result);
+        return result;
+    }
 
     @GetMapping("/sinhvien/getnoti")
     public ArrayList<NotificationModel> getNoti(){
@@ -51,7 +85,12 @@ public class SinhVienController {
                 String from = tmp.get(2);
                 String toClass = tmp.get(1).split(":")[1].replace(" ","");
                 String date = tmp.get(3);
-                result.add(new NotificationModel(from, toClass, date, link));
+
+                Document tmpDoc = Jsoup.connect(link).cookies(cookies).get();
+
+                String details = tmpDoc.select("tbody").select("tr").get(2).select("td").get(1).text();
+
+                result.add(new NotificationModel(from, toClass, date, details));
             }
         }catch(Exception ex){return null;}
         return result;
@@ -306,6 +345,7 @@ public class SinhVienController {
                     scheduleDoc = Jsoup.connect(scheduleURL).cookies(cookies).get();
                     infoDoc = Jsoup.connect(informationURL).cookies(cookies).get();
                     ketQuaDoc = Jsoup.connect(ketQuaURL).cookies(cookies).get();
+                    tuitionDoc = Jsoup.connect(tuitionURL).cookies(cookies).get();
                 }
             } catch (Exception ex) {
                 return true;
@@ -315,6 +355,6 @@ public class SinhVienController {
     }
 
     private boolean checkNull(){
-        return scheduleDoc == null || infoDoc == null || ketQuaDoc == null;
+        return scheduleDoc == null || infoDoc == null || ketQuaDoc == null || tuitionDoc == null;
     }
 }

@@ -13,6 +13,7 @@ public class SessionHelper {
     private static ArrayList<ScheduleModel> listTkb;
     private static ArrayList<KetQuaHocTapModel> listKq;
     private static ArrayList<NewsModel> listNews;
+    private static ArrayList<TuitionModel> listTuition;
 
     public static Map<String, String> getCookies() {
         return cookies;
@@ -68,5 +69,13 @@ public class SessionHelper {
 
     public static void setListNews(ArrayList<NewsModel> listNews) {
         SessionHelper.listNews = listNews;
+    }
+
+    public static ArrayList<TuitionModel> getListTuition() {
+        return listTuition;
+    }
+
+    public static void setListTuition(ArrayList<TuitionModel> listTuition) {
+        SessionHelper.listTuition = listTuition;
     }
 }

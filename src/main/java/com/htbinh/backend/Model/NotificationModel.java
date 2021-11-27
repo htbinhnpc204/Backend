@@ -1,13 +1,14 @@
 package com.htbinh.backend.Model;
 
 public class NotificationModel {
-    String from, toClasses, date, detailsLink;
+    String from, toClasses, date;
+    String details;
 
-    public NotificationModel(String from, String toClasses, String date, String detailsLink) {
+    public NotificationModel(String from, String toClasses, String date, String details) {
         this.from = from;
         this.toClasses = toClasses;
         this.date = date;
-        this.detailsLink = detailsLink;
+        this.details = details;
     }
 
     public String getFrom() {
@@ -34,11 +35,11 @@ public class NotificationModel {
         this.date = date;
     }
 
-    public String getDetailsLink() {
-        return detailsLink;
+    public String getDetails() {
+        return details;
     }
 
-    public void setDetailsLink(String detailsLink) {
-        this.detailsLink = detailsLink;
+    public void setDetails(String details) {
+        this.details = details;
     }
 }
