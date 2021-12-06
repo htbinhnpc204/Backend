@@ -3,13 +3,14 @@ package com.htbinh.backend.Model;
 public class TuitionModel {
     private String hocKy;
     private int soTinChi;
-    private String hocPhi, noKyTruoc;
+    private String hocPhi, noKyTruoc, duKyTruoc;
 
-    public TuitionModel(String hocKy, int soTinChi, String hocPhi, String noKyTruoc) {
+    public TuitionModel(String hocKy, int soTinChi, String hocPhi, String noKyTruoc, String duKyTruoc) {
         this.hocKy = hocKy;
         this.soTinChi = soTinChi;
         this.hocPhi = hocPhi;
         this.noKyTruoc = noKyTruoc;
+        this.duKyTruoc = duKyTruoc;
     }
 
     public String getHocKy() {
@@ -43,4 +44,8 @@ public class TuitionModel {
     public void setNoKyTruoc(String noKyTruoc) {
         this.noKyTruoc = noKyTruoc;
     }
+
+    public String getDuKyTruoc() { return duKyTruoc; }
+
+    public void setDuKyTruoc(String duKyTruoc) { this.duKyTruoc = duKyTruoc; }
 }
