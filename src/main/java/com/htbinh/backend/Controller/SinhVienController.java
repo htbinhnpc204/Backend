@@ -155,7 +155,7 @@ public class SinhVienController {
     }
 
     @GetMapping("/sinhvien/getinfo")
-    public StudentModel getSinhVien() {
+    public StudentModel getStudentInfo() {
         if (checkSession()) {
             return null;
         }
@@ -171,15 +171,27 @@ public class SinhVienController {
                 list) {
             raw.add(e.val());
         }
+
+        String soCMND = infoDoc.select("input[name=vdata[cmnd]]").val().equals("") ? "Chưa cập nhật" : infoDoc.select("input[name=vdata[cmnd]]").val();
+        String noiSinh = infoDoc.select("input[name=vdata[noisinh]]").val().equals("") ? "Chưa cập nhật" : infoDoc.select("input[name=vdata[noisinh]]").val();
+        String soDienThoai = infoDoc.select("input[name=vdata[didong]]").val().equals("") ? "Chưa cập nhật" : infoDoc.select("input[name=vdata[didong]]").val();
+        String Email = infoDoc.select("input[name=vdata[email]]").val().equals("") ? "Chưa cập nhật" : infoDoc.select("input[name=vdata[email]]").val();
         svModel = new StudentModel(SessionHelper.getUser().getMsv(), raw.get(0),
-                raw.get(1), raw.get(4), raw.get(3), getDob());
+                raw.get(1), raw.get(4), raw.get(3), getDob(), soCMND, noiSinh, soDienThoai, Email);
         SessionHelper.setInfoSinhVien(svModel);
 
         return svModel;
     }
 
+    @GetMapping("/sinhvien/lichthi")
+    public ArrayList<ExamScheduleModel> getExamSchedules(){
+        //TODO
+        //CheckThat: Học kỳ hiện tại chưa có lịch thi.
+        return null;
+    }
+
     @GetMapping("/sinhvien/gettkb")
-    public ArrayList<ScheduleModel> getTkb() {
+    public ArrayList<ScheduleModel> getSchedule() {
         /*
 //        if (!checkSession()) {
 //            return null;
@@ -237,7 +249,7 @@ public class SinhVienController {
     }
 
     @GetMapping("/sinhvien/kqhoctap")
-    public ArrayList<KetQuaHocTapModel> getKq() {
+    public ArrayList<KetQuaHocTapModel> getResult() {
         if (checkSession()) {
             return null;
         }
@@ -268,7 +280,7 @@ public class SinhVienController {
     }
 
     @GetMapping("/sinhvien/kqhoctap/chitiet")
-    public ArrayList<KetQuaHocTapChiTietModel> getChiTietKq(@RequestParam String hocKy) {
+    public ArrayList<KetQuaHocTapChiTietModel> getResultDetails(@RequestParam String hocKy) {
         if (checkSession()) {
             return null;
         }
