@@ -121,8 +121,8 @@ public class SinhVienController {
 
     @GetMapping("/getNews")
     public ArrayList<NewsModel> getNews() {
-
-        String newsURL = "https://ute.udn.vn/LoaiTinTuc/1/Tin-tuc-chung.aspx";
+        String baseURL = "https://ute.udn.vn/";
+        String newsURL = "default.aspx";
 
         if(SessionHelper.getListNews() != null){
             return SessionHelper.getListNews();
@@ -130,27 +130,47 @@ public class SinhVienController {
 
         ArrayList<NewsModel> result = new ArrayList<>();
         try{
-            Connection.Response res = Jsoup.connect(newsURL).method(Connection.Method.POST).execute();
+            Connection.Response res = Jsoup.connect(baseURL + newsURL).method(Connection.Method.GET).execute();
             Document raw = res.parse();
 
-            Elements magazine_items = raw.select("div.magazine-list")
-                    .select("div.t3-content")
-                    .select("div.magazine-item");
+            Elements magazine_items = raw.select("div.row-articles");
+            for (Element articles:
+                    magazine_items) {
+                for (Element item:
+                        articles.select("div.magazine-item")) {
+                    String title = item.select("h3").text();
+                    String description = item.select("div.magazine-item-ct").text();
+                    String published_date = item.select("dd.published").text();
+                    String imageLink = baseURL + item.select("div.item-image").select("img").first().attr("src");
+                    String detailsLink = baseURL + item.select("a").first().attr("href");
 
-            for (Element item:
-                 magazine_items) {
-                String title = item.select("h3").select("a").text();
-                String description = item.select("div.magazine-item-ct").select("p").first().text();
-                String published_date = item.select("dd.published").text();
-                String imageLink = "https://ute.udn.vn" + item.select("div.item-image").select("img").first().attr("src");
-                String detailsLink = item.select("h3").select("a").first().attr("href");
-
-                result.add(new NewsModel(title, description, published_date, imageLink, detailsLink));
+                    result.add(new NewsModel(title, description, published_date, imageLink, detailsLink));
+                }
             }
+            SessionHelper.setListNews(result);
         }catch (Exception ex){
+            System.out.println(ex.toString());
         }
 
-        SessionHelper.setListNews(result);
+        return result;
+    }
+
+    @GetMapping("/getNewsDetails")
+    public String getNewsDetails(@RequestParam String URL){
+        String baseURL = "https://ute.udn.vn";
+        String result = "";
+        try{
+            Connection.Response res = Jsoup.connect(URL).method(Connection.Method.GET).execute();
+            Document raw = res.parse();
+            for (Element img:
+                 raw.select("img")) {
+                img.attr("src", baseURL + img.attr("src"));
+            }
+            result = raw.select("section.article-content").html();
+        }catch (Exception ex){
+            System.out.println(ex.toString());
+        }
+
         return result;
     }
 
