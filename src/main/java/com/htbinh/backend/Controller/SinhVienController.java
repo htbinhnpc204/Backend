@@ -60,8 +60,9 @@ public class SinhVienController {
             String hocPhi = buffer.get(2);
             String noKyTruoc = buffer.get(7);
             String duKyTruoc = buffer.get(8);
+            String tong = buffer.get(9);
 
-            result.add(new TuitionModel(hocKy, soTinChi, hocPhi, noKyTruoc, duKyTruoc));
+            result.add(new TuitionModel(hocKy, soTinChi, hocPhi, noKyTruoc, duKyTruoc, tong));
         }
         SessionHelper.setListTuition(result);
         return result;
