@@ -167,7 +167,7 @@ public class SinhVienController {
                  raw.select("img")) {
                 img.attr("src", baseURL + img.attr("src"));
             }
-            result = raw.select("section.article-content").html();
+            result = raw.select("section.article-full").html();
         }catch (Exception ex){
             System.out.println(ex.toString());
         }
