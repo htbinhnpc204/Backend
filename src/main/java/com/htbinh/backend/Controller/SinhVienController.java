@@ -197,8 +197,9 @@ public class SinhVienController {
         String noiSinh = infoDoc.select("input[name=vdata[noisinh]]").val().equals("") ? "Chưa cập nhật" : infoDoc.select("input[name=vdata[noisinh]]").val();
         String soDienThoai = infoDoc.select("input[name=vdata[didong]]").val().equals("") ? "Chưa cập nhật" : infoDoc.select("input[name=vdata[didong]]").val();
         String Email = infoDoc.select("input[name=vdata[email]]").val().equals("") ? "Chưa cập nhật" : infoDoc.select("input[name=vdata[email]]").val();
+        String avtLink = infoDoc.select("img.image-avatar").get(0).attr("src");
         svModel = new StudentModel(SessionHelper.getUser().getMsv(), raw.get(0),
-                raw.get(1), raw.get(4), raw.get(3), getDob(), soCMND, noiSinh, soDienThoai, Email);
+                raw.get(1), raw.get(4), raw.get(3), getDob(), soCMND, noiSinh, soDienThoai, Email, avtLink);
         SessionHelper.setInfoSinhVien(svModel);
 
         return svModel;

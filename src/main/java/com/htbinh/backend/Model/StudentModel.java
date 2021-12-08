@@ -5,8 +5,9 @@ import java.util.ArrayList;
 public class StudentModel {
     private String ma_sv, ten_sv, lop, nganh, khoa;
     private String ngaySinh, soCMND, noiSinh, soDienThoai, Email;
+    private String avatarLink;
 
-    public StudentModel(String ma_sv, String ten_sv, String lop, String nganh, String khoa, String ngaySinh, String soCMND, String noiSinh, String soDienThoai, String email) {
+    public StudentModel(String ma_sv, String ten_sv, String lop, String nganh, String khoa, String ngaySinh, String soCMND, String noiSinh, String soDienThoai, String email, String avatarLink) {
         this.ma_sv = ma_sv;
         this.ten_sv = ten_sv;
         this.lop = lop;
@@ -16,7 +17,8 @@ public class StudentModel {
         this.soCMND = soCMND;
         this.noiSinh = noiSinh;
         this.soDienThoai = soDienThoai;
-        Email = email;
+        this.Email = email;
+        this.avatarLink = avatarLink;
     }
 
     public StudentModel(String ma_sv, String ten_sv, String lop, String nganh, String khoa, String ngaySinh) {
@@ -106,5 +108,13 @@ public class StudentModel {
 
     public void setEmail(String email) {
         Email = email;
+    }
+
+    public String getAvatarLink() {
+        return avatarLink;
+    }
+
+    public void setAvatarLink(String avatarLink) {
+        this.avatarLink = avatarLink;
     }
 }
