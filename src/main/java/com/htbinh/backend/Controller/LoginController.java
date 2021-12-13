@@ -25,8 +25,9 @@ public class LoginController {
             if(MultiSession.sessionDic == null){
                 MultiSession.init();
             }
-
-            MultiSession.sessionDic.put(user.getMsv(), new SessionHelper(res.cookies(), user));
+            if(!MultiSession.sessionDic.containsKey(user.getMsv())){
+                MultiSession.sessionDic.put(user.getMsv(), new SessionHelper(res.cookies(), user));
+            }
             return checkLogin(res.body());
         } catch (IOException ioException) {
             Sentry.captureException(ioException);

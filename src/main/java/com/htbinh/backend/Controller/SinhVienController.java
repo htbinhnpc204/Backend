@@ -125,15 +125,9 @@ public class SinhVienController {
     }
 
     @GetMapping("/getNews")
-    public ArrayList<NewsModel> getNews(@RequestBody String SessionID) {
+    public ArrayList<NewsModel> getNews() {
         String baseURL = "https://ute.udn.vn/";
         String newsURL = "default.aspx";
-
-        SessionHelper sh = MultiSession.getSessionByID(SessionID);
-
-        if (sh.getListNews() != null) {
-            return sh.getListNews();
-        }
 
         ArrayList<NewsModel> result = new ArrayList<>();
         try {
@@ -154,9 +148,7 @@ public class SinhVienController {
                     result.add(new NewsModel(title, description, published_date, imageLink, detailsLink));
                 }
             }
-            sh.setListNews(result);
         } catch (Exception ex) {
-            System.out.println(ex.toString());
         }
 
         return result;
