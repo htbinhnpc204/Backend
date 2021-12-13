@@ -37,9 +37,9 @@ public class SinhVienController {
     Document infoDoc, scheduleDoc, ketQuaDoc, tuitionDoc;
 
     @GetMapping("/sinhvien/getfee")
-    public ArrayList<TuitionModel> getTuition(@RequestBody String SessionID) {
+    public ArrayList<TuitionModel> getTuition(@RequestBody LoginModel SessionID) {
 
-        SessionHelper sh = MultiSession.getSessionByID(SessionID);
+        SessionHelper sh = MultiSession.getSessionByID(SessionID.getMsv());
 
         if (sh.getListTuition() != null) {
             return sh.getListTuition();
@@ -174,9 +174,9 @@ public class SinhVienController {
     }
 
     @GetMapping("/sinhvien/getinfo")
-    public StudentModel getStudentInfo(@RequestBody String SessionID) {
+    public StudentModel getStudentInfo(@RequestBody LoginModel SessionID) {
 
-        SessionHelper sh = MultiSession.getSessionByID(SessionID);
+        SessionHelper sh = MultiSession.getSessionByID(SessionID.getMsv());
 
         StudentModel svModel;
         ArrayList<String> raw = new ArrayList<>();
@@ -208,7 +208,7 @@ public class SinhVienController {
     }
 
     @GetMapping("/sinhvien/gettkb")
-    public ArrayList<ScheduleModel> getSchedule(@RequestBody String SessionID) {
+    public ArrayList<ScheduleModel> getSchedule(@RequestBody LoginModel SessionID) {
         /*
 //        if (!checkSession()) {
 //            return null;
@@ -229,7 +229,7 @@ public class SinhVienController {
 //        }
 //        return result;*/ //for old code get Tkb
 
-        SessionHelper sh = MultiSession.getSessionByID(SessionID);
+        SessionHelper sh = MultiSession.getSessionByID(SessionID.getMsv());
 
         if (sh.getListTkb() != null) {
             return sh.getListTkb();
@@ -268,8 +268,8 @@ public class SinhVienController {
     }
 
     @GetMapping("/sinhvien/kqhoctap")
-    public ArrayList<KetQuaHocTapModel> getResult(@RequestBody String SessionID) {
-        SessionHelper sh = MultiSession.getSessionByID(SessionID);
+    public ArrayList<KetQuaHocTapModel> getResult(@RequestBody LoginModel SessionID) {
+        SessionHelper sh = MultiSession.getSessionByID(SessionID.getMsv());
         getSupport("result", sh);
         if (sh.getListKq() != null) {
             return sh.getListKq();
@@ -298,8 +298,8 @@ public class SinhVienController {
     }
 
     @GetMapping("/sinhvien/kqhoctap/chitiet")
-    public ArrayList<KetQuaHocTapChiTietModel> getResultDetails(@RequestParam String hocKy, @RequestBody String SessionID) {
-        SessionHelper sh = MultiSession.getSessionByID(SessionID);
+    public ArrayList<KetQuaHocTapChiTietModel> getResultDetails(@RequestParam String hocKy, @RequestBody LoginModel SessionID) {
+        SessionHelper sh = MultiSession.getSessionByID(SessionID.getMsv());
 
         if (sh.getListKqChiTiet() != null) {
             return sh.getListKqChiTiet();
