@@ -6,76 +6,72 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class SessionHelper {
-    private static Map<String, String> cookies;
-    private static LoginModel user;
-    private static ArrayList<KetQuaHocTapChiTietModel> listKqChiTiet;
-    private static StudentModel infoSinhVien;
-    private static ArrayList<ScheduleModel> listTkb;
-    private static ArrayList<KetQuaHocTapModel> listKq;
-    private static ArrayList<NewsModel> listNews;
-    private static ArrayList<TuitionModel> listTuition;
+    private Map<String, String> cookies;
+    private LoginModel user;
+    private ArrayList<KetQuaHocTapChiTietModel> listKqChiTiet;
+    private ArrayList<ScheduleModel> listTkb;
+    private ArrayList<KetQuaHocTapModel> listKq;
+    private ArrayList<NewsModel> listNews;
+    private ArrayList<TuitionModel> listTuition;
 
-    public static Map<String, String> getCookies() {
+    public Map<String, String> getCookies() {
         return cookies;
     }
 
-    public static void setCookies(Map<String, String> cookies) {
-        SessionHelper.cookies = cookies;
+    public void setCookies(Map<String, String> cookies) {
+        this.cookies = cookies;
     }
 
-    public static LoginModel getUser() {
+    public LoginModel getUser() {
         return user;
     }
 
-    public static void setUser(LoginModel user) {
-        SessionHelper.user = user;
+    public void setUser(LoginModel user) {
+        this.user = user;
     }
 
-    public static ArrayList<KetQuaHocTapChiTietModel> getListKqChiTiet() {
+    public ArrayList<KetQuaHocTapChiTietModel> getListKqChiTiet() {
         return listKqChiTiet;
     }
 
-    public static void setListKqChiTiet(ArrayList<KetQuaHocTapChiTietModel> listKqChiTiet) {
-        SessionHelper.listKqChiTiet = listKqChiTiet;
+    public void setListKqChiTiet(ArrayList<KetQuaHocTapChiTietModel> listKqChiTiet) {
+        this.listKqChiTiet = listKqChiTiet;
     }
 
-    public static StudentModel getInfoSinhVien() {
-        return infoSinhVien;
-    }
-
-    public static void setInfoSinhVien(StudentModel infoSinhVien) {
-        SessionHelper.infoSinhVien = infoSinhVien;
-    }
-
-    public static ArrayList<ScheduleModel> getListTkb() {
+    public ArrayList<ScheduleModel> getListTkb() {
         return listTkb;
     }
 
-    public static void setListTkb(ArrayList<ScheduleModel> listTkb) {
-        SessionHelper.listTkb = listTkb;
+    public void setListTkb(ArrayList<ScheduleModel> listTkb) {
+        this.listTkb = listTkb;
     }
 
-    public static ArrayList<KetQuaHocTapModel> getListKq() {
+    public ArrayList<KetQuaHocTapModel> getListKq() {
         return listKq;
     }
 
-    public static void setListKq(ArrayList<KetQuaHocTapModel> listKq) {
-        SessionHelper.listKq = listKq;
+    public void setListKq(ArrayList<KetQuaHocTapModel> listKq) {
+        this.listKq = listKq;
     }
 
-    public static ArrayList<NewsModel> getListNews() {
+    public ArrayList<NewsModel> getListNews() {
         return listNews;
     }
 
-    public static void setListNews(ArrayList<NewsModel> listNews) {
-        SessionHelper.listNews = listNews;
+    public void setListNews(ArrayList<NewsModel> listNews) {
+        this.listNews = listNews;
     }
 
-    public static ArrayList<TuitionModel> getListTuition() {
+    public ArrayList<TuitionModel> getListTuition() {
         return listTuition;
     }
 
-    public static void setListTuition(ArrayList<TuitionModel> listTuition) {
-        SessionHelper.listTuition = listTuition;
+    public void setListTuition(ArrayList<TuitionModel> listTuition) {
+        this.listTuition = listTuition;
+    }
+
+    public SessionHelper(Map<String, String> cookies, LoginModel user) {
+        this.cookies = cookies;
+        this.user = user;
     }
 }

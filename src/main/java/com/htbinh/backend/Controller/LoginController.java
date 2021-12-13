@@ -1,14 +1,12 @@
 package com.htbinh.backend.Controller;
 
 import com.htbinh.backend.Model.LoginModel;
+import com.htbinh.backend.MultiSession;
 import com.htbinh.backend.SessionHelper;
 import io.sentry.Sentry;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -23,8 +21,12 @@ public class LoginController {
         try {
             Connection.Response res = Jsoup.connect(loginUrl).data("username", user.getMsv(),
                     "password", user.getPassword()).method(Connection.Method.POST).execute();
-            SessionHelper.setCookies(res.cookies());
-            SessionHelper.setUser(user);
+
+            if(MultiSession.sessionDic == null){
+                MultiSession.init();
+            }
+
+            MultiSession.sessionDic.put(user.getMsv(), new SessionHelper(res.cookies(), user));
             return checkLogin(res.body());
         } catch (IOException ioException) {
             Sentry.captureException(ioException);
