@@ -10,7 +10,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,9 +36,9 @@ public class SinhVienController {
     Document infoDoc, scheduleDoc, ketQuaDoc, tuitionDoc;
 
     @GetMapping("/sinhvien/getfee")
-    public ArrayList<TuitionModel> getTuition(@RequestBody LoginModel SessionID) {
+    public ArrayList<TuitionModel> getTuition(@RequestParam String SessionID) {
 
-        SessionHelper sh = MultiSession.getSessionByID(SessionID.getMsv());
+        SessionHelper sh = MultiSession.getSessionByID(SessionID);
 
         if (sh.getListTuition() != null) {
             return sh.getListTuition();
@@ -125,9 +124,15 @@ public class SinhVienController {
     }
 
     @GetMapping("/getNews")
-    public ArrayList<NewsModel> getNews() {
+    public ArrayList<NewsModel> getNews(@RequestParam String SessionID) {
         String baseURL = "https://ute.udn.vn/";
         String newsURL = "default.aspx";
+
+        SessionHelper sh = MultiSession.getSessionByID(SessionID);
+
+        if (sh.getListNews() != null) {
+            return sh.getListNews();
+        }
 
         ArrayList<NewsModel> result = new ArrayList<>();
         try {
@@ -148,7 +153,9 @@ public class SinhVienController {
                     result.add(new NewsModel(title, description, published_date, imageLink, detailsLink));
                 }
             }
+            sh.setListNews(result);
         } catch (Exception ex) {
+            System.out.println(ex.toString());
         }
 
         return result;
@@ -174,9 +181,9 @@ public class SinhVienController {
     }
 
     @GetMapping("/sinhvien/getinfo")
-    public StudentModel getStudentInfo(@RequestBody LoginModel SessionID) {
+    public StudentModel getStudentInfo(@RequestParam String SessionID) {
 
-        SessionHelper sh = MultiSession.getSessionByID(SessionID.getMsv());
+        SessionHelper sh = MultiSession.getSessionByID(SessionID);
 
         StudentModel svModel;
         ArrayList<String> raw = new ArrayList<>();
@@ -208,7 +215,7 @@ public class SinhVienController {
     }
 
     @GetMapping("/sinhvien/gettkb")
-    public ArrayList<ScheduleModel> getSchedule(@RequestBody LoginModel SessionID) {
+    public ArrayList<ScheduleModel> getSchedule(@RequestParam String SessionID) {
         /*
 //        if (!checkSession()) {
 //            return null;
@@ -229,7 +236,7 @@ public class SinhVienController {
 //        }
 //        return result;*/ //for old code get Tkb
 
-        SessionHelper sh = MultiSession.getSessionByID(SessionID.getMsv());
+        SessionHelper sh = MultiSession.getSessionByID(SessionID);
 
         if (sh.getListTkb() != null) {
             return sh.getListTkb();
@@ -268,8 +275,8 @@ public class SinhVienController {
     }
 
     @GetMapping("/sinhvien/kqhoctap")
-    public ArrayList<KetQuaHocTapModel> getResult(@RequestBody LoginModel SessionID) {
-        SessionHelper sh = MultiSession.getSessionByID(SessionID.getMsv());
+    public ArrayList<KetQuaHocTapModel> getResult(@RequestParam String SessionID) {
+        SessionHelper sh = MultiSession.getSessionByID(SessionID);
         getSupport("result", sh);
         if (sh.getListKq() != null) {
             return sh.getListKq();
@@ -298,8 +305,8 @@ public class SinhVienController {
     }
 
     @GetMapping("/sinhvien/kqhoctap/chitiet")
-    public ArrayList<KetQuaHocTapChiTietModel> getResultDetails(@RequestParam String hocKy, @RequestBody LoginModel SessionID) {
-        SessionHelper sh = MultiSession.getSessionByID(SessionID.getMsv());
+    public ArrayList<KetQuaHocTapChiTietModel> getResultDetails(@RequestParam String hocKy, @RequestParam String SessionID) {
+        SessionHelper sh = MultiSession.getSessionByID(SessionID);
 
         if (sh.getListKqChiTiet() != null) {
             return sh.getListKqChiTiet();
@@ -319,12 +326,12 @@ public class SinhVienController {
         if (startElement == null) {
             return null;
         } else {
+            int i = 1;
             Element nextRow = startElement;
             do {
                 nextRow = nextRow.nextElementSibling();
                 Elements row = nextRow.select("td");
                 row.select("span").remove();
-
                 if (row.size() == 1) {
                     break;
                 }
