@@ -10,6 +10,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,7 +37,7 @@ public class SinhVienController {
     Document infoDoc, scheduleDoc, ketQuaDoc, tuitionDoc;
 
     @GetMapping("/sinhvien/getfee")
-    public ArrayList<TuitionModel> getTuition(@RequestParam String SessionID) {
+    public ArrayList<TuitionModel> getTuition(@RequestBody String SessionID) {
 
         SessionHelper sh = MultiSession.getSessionByID(SessionID);
 
@@ -124,7 +125,7 @@ public class SinhVienController {
     }
 
     @GetMapping("/getNews")
-    public ArrayList<NewsModel> getNews(@RequestParam String SessionID) {
+    public ArrayList<NewsModel> getNews(@RequestBody String SessionID) {
         String baseURL = "https://ute.udn.vn/";
         String newsURL = "default.aspx";
 
@@ -181,7 +182,7 @@ public class SinhVienController {
     }
 
     @GetMapping("/sinhvien/getinfo")
-    public StudentModel getStudentInfo(@RequestParam String SessionID) {
+    public StudentModel getStudentInfo(@RequestBody String SessionID) {
 
         SessionHelper sh = MultiSession.getSessionByID(SessionID);
 
@@ -215,7 +216,7 @@ public class SinhVienController {
     }
 
     @GetMapping("/sinhvien/gettkb")
-    public ArrayList<ScheduleModel> getSchedule(@RequestParam String SessionID) {
+    public ArrayList<ScheduleModel> getSchedule(@RequestBody String SessionID) {
         /*
 //        if (!checkSession()) {
 //            return null;
@@ -275,7 +276,7 @@ public class SinhVienController {
     }
 
     @GetMapping("/sinhvien/kqhoctap")
-    public ArrayList<KetQuaHocTapModel> getResult(@RequestParam String SessionID) {
+    public ArrayList<KetQuaHocTapModel> getResult(@RequestBody String SessionID) {
         SessionHelper sh = MultiSession.getSessionByID(SessionID);
         getSupport("result", sh);
         if (sh.getListKq() != null) {
@@ -305,7 +306,7 @@ public class SinhVienController {
     }
 
     @GetMapping("/sinhvien/kqhoctap/chitiet")
-    public ArrayList<KetQuaHocTapChiTietModel> getResultDetails(@RequestParam String hocKy, @RequestParam String SessionID) {
+    public ArrayList<KetQuaHocTapChiTietModel> getResultDetails(@RequestParam String hocKy, @RequestBody String SessionID) {
         SessionHelper sh = MultiSession.getSessionByID(SessionID);
 
         if (sh.getListKqChiTiet() != null) {
