@@ -2,76 +2,26 @@ package com.htbinh.backend;
 
 import com.htbinh.backend.Model.*;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class SessionHelper {
-    private Map<String, String> cookies;
-    private LoginModel user;
-    private ArrayList<KetQuaHocTapChiTietModel> listKqChiTiet;
-    private ArrayList<ScheduleModel> listTkb;
-    private ArrayList<KetQuaHocTapModel> listKq;
-    private ArrayList<NewsModel> listNews;
-    private ArrayList<TuitionModel> listTuition;
+    private static Map<String, LoginModel> user = new HashMap<>();
+    private static String Notification;
 
-    public Map<String, String> getCookies() {
-        return cookies;
+    public static String getNotification() {
+        return Notification;
     }
 
-    public void setCookies(Map<String, String> cookies) {
-        this.cookies = cookies;
+    public static void setNotification(String notification) {
+        Notification = notification;
     }
 
-    public LoginModel getUser() {
-        return user;
+    public static LoginModel getUserByID(String msv) {
+        return user.get(msv);
     }
 
-    public void setUser(LoginModel user) {
-        this.user = user;
-    }
-
-    public ArrayList<KetQuaHocTapChiTietModel> getListKqChiTiet() {
-        return listKqChiTiet;
-    }
-
-    public void setListKqChiTiet(ArrayList<KetQuaHocTapChiTietModel> listKqChiTiet) {
-        this.listKqChiTiet = listKqChiTiet;
-    }
-
-    public ArrayList<ScheduleModel> getListTkb() {
-        return listTkb;
-    }
-
-    public void setListTkb(ArrayList<ScheduleModel> listTkb) {
-        this.listTkb = listTkb;
-    }
-
-    public ArrayList<KetQuaHocTapModel> getListKq() {
-        return listKq;
-    }
-
-    public void setListKq(ArrayList<KetQuaHocTapModel> listKq) {
-        this.listKq = listKq;
-    }
-
-    public ArrayList<NewsModel> getListNews() {
-        return listNews;
-    }
-
-    public void setListNews(ArrayList<NewsModel> listNews) {
-        this.listNews = listNews;
-    }
-
-    public ArrayList<TuitionModel> getListTuition() {
-        return listTuition;
-    }
-
-    public void setListTuition(ArrayList<TuitionModel> listTuition) {
-        this.listTuition = listTuition;
-    }
-
-    public SessionHelper(Map<String, String> cookies, LoginModel user) {
-        this.cookies = cookies;
-        this.user = user;
+    public static void setUser(LoginModel user) {
+        SessionHelper.user.put(user.getMsv(), user);
     }
 }

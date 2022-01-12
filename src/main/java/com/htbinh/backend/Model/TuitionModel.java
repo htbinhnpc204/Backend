@@ -3,14 +3,17 @@ package com.htbinh.backend.Model;
 public class TuitionModel {
     private String hocKy;
     private int soTinChi;
-    private String hocPhi, noKyTruoc, duKyTruoc, tong;
+    private String hocPhi, noKyTruoc, tong;
 
-    public TuitionModel(String hocKy, int soTinChi, String hocPhi, String noKyTruoc, String duKyTruoc, String tong) {
+    public TuitionModel(String hocKy) {
+        this.hocKy = hocKy;
+    }
+
+    public TuitionModel(String hocKy, int soTinChi, String hocPhi, String noKyTruoc, String tong) {
         this.hocKy = hocKy;
         this.soTinChi = soTinChi;
         this.hocPhi = hocPhi;
         this.noKyTruoc = noKyTruoc;
-        this.duKyTruoc = duKyTruoc;
         this.tong = tong;
     }
 
@@ -45,10 +48,6 @@ public class TuitionModel {
     public void setNoKyTruoc(String noKyTruoc) {
         this.noKyTruoc = noKyTruoc;
     }
-
-    public String getDuKyTruoc() { return duKyTruoc; }
-
-    public void setDuKyTruoc(String duKyTruoc) { this.duKyTruoc = duKyTruoc; }
 
     public String getTong() {
         return tong;

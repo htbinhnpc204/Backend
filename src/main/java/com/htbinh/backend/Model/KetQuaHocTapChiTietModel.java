@@ -3,15 +3,12 @@ package com.htbinh.backend.Model;
 public class KetQuaHocTapChiTietModel {
     String tenMh, maHp, diemChu;
     int tinChi;
-    float diemCc, diemGk, diemCk, diemTk;
+    float diemTk;
 
-    public KetQuaHocTapChiTietModel(String tenMh, String maHp, int tinChi, float diemCc, float diemGk, float diemCk, float diemTk, String diemChu) {
+    public KetQuaHocTapChiTietModel(String tenMh, String maHp, int tinChi, float diemTk, String diemChu) {
         this.tenMh = tenMh;
         this.maHp = maHp;
         this.tinChi = tinChi;
-        this.diemCc = diemCc;
-        this.diemGk = diemGk;
-        this.diemCk = diemCk;
         this.diemTk = diemTk;
         this.diemChu = diemChu;
     }
@@ -38,30 +35,6 @@ public class KetQuaHocTapChiTietModel {
 
     public void setTinChi(int tinChi) {
         this.tinChi = tinChi;
-    }
-
-    public float getDiemCc() {
-        return diemCc;
-    }
-
-    public void setDiemCc(float diemCc) {
-        this.diemCc = diemCc;
-    }
-
-    public float getDiemGk() {
-        return diemGk;
-    }
-
-    public void setDiemGk(float diemGk) {
-        this.diemGk = diemGk;
-    }
-
-    public float getDiemCk() {
-        return diemCk;
-    }
-
-    public void setDiemCk(float diemCk) {
-        this.diemCk = diemCk;
     }
 
     public float getDiemTk() {
