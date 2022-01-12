@@ -1,7 +1,6 @@
 package com.htbinh.backend.Controller;
 
 import com.htbinh.backend.Model.LoginModel;
-import com.htbinh.backend.MultiSession;
 import com.htbinh.backend.SessionHelper;
 import io.sentry.Sentry;
 import org.jsoup.Connection;
@@ -50,9 +49,13 @@ public class LoginController {
                 return "Vui lòng thử lại sau";
             }
         }
+        if(SessionHelper.getUserByID(user.getMsv()) != null){
+            SessionHelper.removeUser(user.getMsv());
+        }
         if(SessionHelper.getUserByID(user.getMsv()) == null){
             SessionHelper.setUser(user);
         }
+
         return checkLogin(res.body());
     }
 

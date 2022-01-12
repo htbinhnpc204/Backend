@@ -24,4 +24,6 @@ public class SessionHelper {
     public static void setUser(LoginModel user) {
         SessionHelper.user.put(user.getMsv(), user);
     }
+
+    public static void removeUser(String msv){ SessionHelper.user.remove(msv); }
 }
