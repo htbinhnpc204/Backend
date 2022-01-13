@@ -230,7 +230,12 @@ public class DaoTaoController {
                 if (input.size() > 0) {
                     s += input.get(0).val();
                 }
-                basicInfo.add(s.split(":")[1].trim());
+                if(s.split(":").length >= 2){
+                    basicInfo.add(s.split(":")[1].trim());
+                }
+                else{
+                    basicInfo.add("Chưa cập nhật");
+                }
             }
             String nganh = getNganh(msv);
             basicInfo.add(nganh);
