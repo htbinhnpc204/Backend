@@ -202,8 +202,8 @@ public class DaoTaoController {
                 if(cRow == 1){ cRow += 1; continue;}
                 Elements cell = row.select("td");
                 if(cell.get(6).text().equals(maHk)){
-                    float dtk = Float.parseFloat(cell.get(4).text());
-                    int tinchi = Integer.parseInt(cell.get(3).text());
+                    float dtk = Float.parseFloat(cell.get(4).text().equals("") ? "-1" : cell.get(4).text());
+                    int tinchi = Integer.parseInt(cell.get(3).text().equals("") ? "-1" : cell.get(3).text());
                     result.add(new KetQuaHocTapChiTietModel(cell.get(2).text(), cell.get(0).text(), tinchi, dtk, cell.get(5).text()));
                 }
             }
